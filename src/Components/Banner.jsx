@@ -38,81 +38,115 @@ const Banner = () => {
     setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
 
   return (
-    <div className="w-full h-screen relative overflow-hidden bg-black">
-      <AnimatePresence initial={false}>
-        {slides.map((slide, index) =>
-          index === current ? (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 1 }}
-              drag="x"
-              dragConstraints={{ left: 0, right: 0 }}
-              onDragEnd={(e, info) => {
-                if (info.offset.x < -50) nextSlide();
-                else if (info.offset.x > 50) prevSlide();
+    <div className="w-full h-[50vh] sm:h-screen relative overflow-hidden bg-black">
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={current}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.8, ease: "easeInOut" }}
+          className="absolute inset-0 w-full h-full"
+        >
+          {/* Preload next image for smoothness */}
+          {slides.map((slide, i) => (
+            <div
+              key={i}
+              className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+              style={{
+                backgroundImage: `url(${slide.bgImage})`,
+                opacity: i === current ? 1 : 0,
+                transition: "opacity 0.8s ease-in-out",
+                // Critical fixes for mobile:
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
               }}
-              className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-cover bg-center"
-              style={{ backgroundImage: `url(${slide.bgImage})` }}
+            />
+          ))}
+
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-black/40" />
+
+          {/* Content */}
+          <div className="relative h-full flex flex-col items-center justify-center text-white px-4">
+            <motion.h1
+              key={`title-${current}`}
+              initial={{ opacity: 0, y: -40 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 40 }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 text-center leading-tight"
             >
-              {/* Gradient Overlay */}
-              <div className="absolute inset-0 bg-black/40"></div>
-
-              {/* Content */}
-              <div className="relative flex flex-col items-center justify-center text-white px-4 sm:px-6 md:px-0">
-                <motion.h1
-                  key={slide.title}
-                  initial={{ opacity: 0, y: -50 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 50 }}
-                  transition={{ duration: 1 }}
-                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 sm:mb-3 md:mb-4 text-center"
-                >
-                  {slide.title}
-                </motion.h1>
-
-                <motion.p
-                  key={slide.subtitle}
-                  initial={{ opacity: 0, y: 50 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -50 }}
-                  transition={{ duration: 1, delay: 0.3 }}
-                  className="text-base sm:text-lg md:text-xl lg:text-2xl text-center"
-                >
-                  {slide.subtitle}
-                </motion.p>
-              </div>
-            </motion.div>
-          ) : null
-        )}
+              {slides[current].title}
+            </motion.h1>
+            <motion.p
+              key={`subtitle-${current}`}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -40 }}
+              transition={{ duration: 0.7, delay: 0.4 }}
+              className="text-base sm:text-lg md:text-xl lg:text-2xl text-center max-w-2xl"
+            >
+              {slides[current].subtitle}
+            </motion.p>
+          </div>
+        </motion.div>
       </AnimatePresence>
 
-      {/* Navigation Buttons */}
+      {/* Navigation Buttons - Hidden on very small screens if needed */}
       <button
         onClick={prevSlide}
-        className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 bg-[#2D6A50] text-white px-3 sm:px-4 py-1 font-semibold sm:py-2 rounded-full"
+        aria-label="Previous slide"
+        className="absolute left-4 top-1/2 -translate-y-1/2 bg-[#2D6A50]/80 hover:bg-[#2D6A50] text-white p-3 rounded-full backdrop-blur-sm transition-all z-10"
       >
-        Prev
+        <svg
+          className="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
       </button>
       <button
         onClick={nextSlide}
-        className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 bg-[#2D6A50] text-white px-3 sm:px-4 py-1 font-semibold sm:py-2 rounded-full"
+        aria-label="Next slide"
+        className="absolute right-4 top-1/2 -translate-y-1/2 bg-[#2D6A50]/80 hover:bg-[#2D6A50] text-white p-3 rounded-full backdrop-blur-sm transition-all z-10"
       >
-        Next
+        <svg
+          className="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 5l7 7-7 7"
+          />
+        </svg>
       </button>
 
       {/* Dot Indicators */}
-      <div className="absolute bottom-6 sm:bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2 sm:gap-3">
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 z-10">
         {slides.map((_, index) => (
-          <span
+          <button
             key={index}
-            className={`w-2 sm:w-3 h-2 sm:h-3 rounded-full cursor-pointer ${
-              current === index ? "bg-white" : "bg-gray-400"
-            }`}
             onClick={() => setCurrent(index)}
-          ></span>
+            aria-label={`Go to slide ${index + 1}`}
+            className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+              current === index
+                ? "bg-white scale-125"
+                : "bg-white/50 hover:bg-white/80"
+            }`}
+          />
         ))}
       </div>
     </div>

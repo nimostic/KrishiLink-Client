@@ -1,7 +1,7 @@
 import React, { use } from "react";
 import { FaFacebook, FaInstagram, FaLinkedin, FaGithub } from "react-icons/fa";
-import { AuthContext } from "../Provider/AuthProvider";
 import { Link } from "react-router";
+import { AuthContext } from "../Provider/AuthContext";
 
 const Footer = () => {
   const { user } = use(AuthContext);

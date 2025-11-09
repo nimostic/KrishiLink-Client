@@ -5,7 +5,7 @@ import { FaRegEye } from "react-icons/fa6";
 import { toast } from "react-toastify";
 import Aos from "aos";
 import "aos/dist/aos.css";
-import { AuthContext } from "../../Provider/AuthProvider";
+import { AuthContext } from "../../Provider/AuthContext";
 const Register = () => {
   useEffect(() => {
     Aos.init({

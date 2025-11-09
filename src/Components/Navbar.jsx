@@ -2,8 +2,8 @@ import { use } from "react";
 import logo from "../assets/logo.png";
 import profilePic from "../assets/profileIcon.png"
 import { Link, NavLink } from "react-router";
-import { AuthContext } from "../Provider/AuthProvider";
 import { toast } from "react-toastify";
+import { AuthContext } from "../Provider/AuthContext";
 
 const Navbar = () => {
   const { user, logout } = use(AuthContext);

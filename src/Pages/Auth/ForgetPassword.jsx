@@ -1,7 +1,7 @@
 import React, { use } from "react";
 import { Link } from "react-router";
 import { toast } from "react-toastify";
-import { AuthContext } from "../../Provider/AuthProvider";
+import { AuthContext } from "../../Provider/AuthContext";
 
 const ForgetPassword = () => {
   const { updatePassword } = use(AuthContext);

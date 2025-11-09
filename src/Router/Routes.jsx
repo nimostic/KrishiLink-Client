@@ -10,6 +10,7 @@ import AddCrops from "../Pages/AddCrops";
 import MyPosts from "../Pages/MyPosts";
 import MyInterest from "../Pages/MyInterest";
 import AllCrops from "../Pages/AllCrops";
+import Erropage from "../Pages/Erropage";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -69,5 +70,9 @@ export const router = createBrowserRouter([
         ),
       },
     ],
+  },
+  {
+    path: "*",
+    Component: Erropage,
   },
 ]);
