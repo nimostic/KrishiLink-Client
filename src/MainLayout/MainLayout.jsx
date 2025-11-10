@@ -9,7 +9,7 @@ const MainLayout = () => {
       <header className="container mx-auto">
         <Navbar />
       </header>
-      <main className="grow flex justify-center items-center">
+      <main className="grow w-full">
         <Outlet />
       </main>
       <footer>

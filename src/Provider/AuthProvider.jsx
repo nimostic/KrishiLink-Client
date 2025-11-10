@@ -16,8 +16,8 @@ import { AuthContext } from "./AuthContext";
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  console.log(user);
-  const [loading, setLoading] = useState(null);
+  // console.log(user);
+  const [loading, setLoading] = useState(true);
 
   const auth = getAuth(app);
 
