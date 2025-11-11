@@ -1,8 +1,17 @@
-import React from "react";
-import { Link } from "react-router";
+import React, { use } from "react";
+import { Link, useNavigate } from "react-router";
+import { AuthContext } from "../Provider/AuthContext";
+import useAxiosSecure from "../Hooks/useAxiosSecure";
+import { toast } from "react-toastify";
 
-const Card = ({ singleCrop }) => {
-  // console.log(singleCrop.owner.ownerName);
+const Card = ({ singleCrop , handleDelete}) => {
+  const createdUserMail = singleCrop.owner?.ownerEmail;
+  const { user } = use(AuthContext);
+
+
+
+
+
   return (
     <div className="relative flex w-full max-w-sm flex-col rounded-xl bg-white shadow-lg transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
       {/* Image / Gradient Header */}
@@ -53,6 +62,13 @@ const Card = ({ singleCrop }) => {
 
       {/* Button */}
       <div className="p-6 pt-0">
+        {createdUserMail === user?.email && (
+          <div className="flex justify-evenly pb-2">
+            <Link className="btn">edit</Link>
+            <button onClick={() => handleDelete(singleCrop._id)} className="btn">delete</button>
+          </div>
+        )}
+
         <Link to={`/crops/${singleCrop._id}`}>
           <button
             type="button"

@@ -52,7 +52,7 @@ const Register = () => {
         updateUser({ displayName: name, photoURL: photo })
           .then(() => {
             setUser({ ...user, displayName: name, photoURL: photo });
-            toast("☑️ Sign Up Successful...");
+            toast("✅ Sign Up Successful...");
             navigate("/");
           })
           .catch((error) => {
@@ -72,7 +72,7 @@ const Register = () => {
       updateUser({ displayName: user.displayName, photoURL: user.photoURL })
         .then(() => {
           setUser(user);
-          toast.success("☑️ Google Sign-In Successful!");
+          toast.success("✅ Google Sign-In Successful!");
           navigate("/");
         })
         .catch(console.log);
