@@ -18,7 +18,7 @@ const LatestCrops = () => {
   }
   return (
     <>
-      <div className="w-full container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 place-items-center p-5">
+      <div className="w-full container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 place-items-center p-5">
         {latest.map((singleCrop) => (
           <Card singleCrop={singleCrop} key={singleCrop._id} />
         ))}
