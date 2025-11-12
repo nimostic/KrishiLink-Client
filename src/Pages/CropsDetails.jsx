@@ -1,38 +1,48 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
-
 import { toast } from "react-toastify";
 import Aos from "aos";
 import "aos/dist/aos.css";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 import { AuthContext } from "../Provider/AuthContext";
 import Loading from "../Components/Loading";
+import Interested from "../Components/Interested";
 
 const CropDetails = () => {
   const { id } = useParams();
   const axiosSecure = useAxiosSecure();
   const { user } = useContext(AuthContext);
+
   const [crop, setCrop] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [interests, setInterests] = useState([]);
   const [formData, setFormData] = useState({ quantity: "", message: "" });
   const [showConfirm, setShowConfirm] = useState(false);
-  console.log(user);
+
   useEffect(() => {
     Aos.init({ duration: 600, once: true });
   }, []);
 
   useEffect(() => {
-    axiosSecure.get(`/crops/${id}`).then((res) => {
-      console.log(res.data);
-      setCrop(res.data);
-      setLoading(false);
-    });
+    const fetchCrop = async () => {
+      try {
+        const res = await axiosSecure.get(`/crops/${id}`);
+        setCrop(res.data);
+        setInterests(res.data.interests || []);
+        setLoading(false);
+      } catch (error) {
+        toast.error("Failed to load crop details");
+        setLoading(false);
+      }
+    };
+    fetchCrop();
   }, [id, axiosSecure]);
 
-  if (loading) return <Loading></Loading>;
+  if (loading) return <Loading />;
   if (!crop) return <div className="text-center py-10">Crop not found</div>;
 
-  const isOwner = user?.email === crop?.ownerEmail;
+  const isOwner = user?.email === crop?.owner?.ownerEmail;
+
   const totalPrice =
     formData.quantity && crop?.pricePerUnit
       ? formData.quantity * crop.pricePerUnit
@@ -63,14 +73,19 @@ const CropDetails = () => {
       status: "pending",
       totalPrice,
     };
+
     try {
-      const res = await axiosSecure.post("/interests", { crop, interestData })
-        toast.success("Interest sent successfully!");
-        setShowConfirm(false);
-        setFormData({ quantity: "", message: "" });
-        console.log(res);
+      await axiosSecure.post("/interests", { crop, interestData });
+      toast.success("Interest sent successfully!");
+
+      // Update local interests so owner sees it
+      setInterests((prev) => [...prev, interestData]);
+
+      setShowConfirm(false);
+      setFormData({ quantity: "", message: "" });
     } catch (error) {
-        toast.error(error.response?.data?.message || "Something went wrong");
+      toast.error(error.response?.data?.message || "Something went wrong");
+      setShowConfirm(false);
     }
   };
 
@@ -153,7 +168,10 @@ const CropDetails = () => {
             <h2 className="text-lg font-semibold text-green-700 mb-3">
               Received Interests
             </h2>
-            <p className="text-gray-500">Show/manage interests here later.</p>
+            <p className="text-gray-500 mb-3">
+              <strong>Total Interested: {interests.length}</strong>
+            </p>
+            <Interested interests={interests}  setInterests={setInterests} crop={crop} />
           </div>
         )}
       </div>

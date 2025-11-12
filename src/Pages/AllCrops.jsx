@@ -36,7 +36,8 @@ const AllCrops = () => {
 
   return (
     <PageWrapper>
-      <div className="container mx-auto py-8 px-4">
+     <div className="bg-[#E9FDF0]">
+       <div className="container mx-auto py-8 px-4 ">
         {/* Search */}
         <SearchWrapper>
           <input
@@ -68,6 +69,7 @@ const AllCrops = () => {
           </>
         )}
       </div>
+     </div>
     </PageWrapper>
   );
 };
