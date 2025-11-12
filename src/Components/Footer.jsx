@@ -7,7 +7,7 @@ const Footer = () => {
   const { user } = use(AuthContext);
 
   return (
-    <footer className="bg-linear-to-b from-green-900 to-green-800 text-gray-100 py-10 mt-16">
+    <footer className="bg-linear-to-b from-green-900 to-green-800 text-gray-100 py-10">
       <div className="w-11/12 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
         {/* Brand */}
         <div>

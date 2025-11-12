@@ -29,6 +29,9 @@ const AddCrops = () => {
         ownerName: user?.displayName,
         ownerEmail: user?.email,
       },
+      interests :{
+        
+      }
     };
 
     axiosSecure.post("/crops", newCrops).then((data) => {

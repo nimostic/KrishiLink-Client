@@ -12,7 +12,7 @@ const MyPosts = () => {
   const { user } = use(AuthContext);
   const [loading, setloading] = useState(false);
   const [crops, setCrops] = useState([]);
-
+  console.log(crops);
   //edit modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCrop, setEditingCrop] = useState(null);

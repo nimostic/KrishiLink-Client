@@ -11,6 +11,7 @@ import MyPosts from "../Pages/MyPosts";
 import MyInterest from "../Pages/MyInterest";
 import AllCrops from "../Pages/AllCrops";
 import Erropage from "../Pages/Erropage";
+import CropsDetails from "../Pages/CropsDetails";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -66,6 +67,14 @@ export const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <MyInterest></MyInterest>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/crops/:id",
+        element: (
+          <PrivateRoute>
+           <CropsDetails></CropsDetails>
           </PrivateRoute>
         ),
       },
