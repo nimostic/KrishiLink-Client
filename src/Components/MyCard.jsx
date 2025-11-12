@@ -4,7 +4,7 @@ import { AuthContext } from "../Provider/AuthContext";
 
 
 
-const Card = ({ singleCrop }) => {
+const MyCard = ({ singleCrop, handleDelete,handleEdit }) => {
   const createdUserMail = singleCrop.owner?.ownerEmail;
   const { user } = use(AuthContext);
 
@@ -58,6 +58,18 @@ const Card = ({ singleCrop }) => {
 
       {/* Button */}
       <div className="p-6 pt-0">
+        {createdUserMail === user?.email && (
+          <div className="flex justify-evenly pb-2">
+            <button onClick={()=>handleEdit(singleCrop._id)} className="btn bg-yellow-500 px-4 py-1 rounded text-white">Edit</button>
+            <button
+              onClick={() => handleDelete(singleCrop._id)}
+              className="btn bg-red-500 px-4 py-1 rounded text-white"
+
+            >
+              Delete
+            </button>
+          </div>
+        )}
 
         <Link to={`/crops/${singleCrop._id}`}>
           <button
@@ -72,4 +84,4 @@ const Card = ({ singleCrop }) => {
   );
 };
 
-export default Card;
+export default MyCard;
