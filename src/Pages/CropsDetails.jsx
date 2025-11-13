@@ -75,7 +75,7 @@ const CropDetails = () => {
     };
 
     try {
-      await axiosSecure.post("/interests", { crop, interestData });
+      await axiosSecure.post("/interests", interestData);
       toast.success("Interest sent successfully!");
 
       // Update local interests so owner sees it

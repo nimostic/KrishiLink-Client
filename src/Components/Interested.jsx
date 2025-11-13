@@ -3,7 +3,7 @@ import Loading from "./Loading";
 const Interested = ({ interests, crop, setInterests }) => {
   console.log(interests);
 
-  if (!interests || interests.length === 0) {
+  if (!Array.isArray(interests) || interests.length === 0) {
     return (
       <p className="text-center text-gray-500 mt-4">
         No interested buyers yet.

@@ -2,29 +2,37 @@ import React, { use, useEffect, useState } from "react";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 import { AuthContext } from "../Provider/AuthContext";
 import Loading from "../Components/Loading";
-import MyCard from "../Components/MyCard";
 import Swal from "sweetalert2";
 import EditModal from "../Pages/EditModal";
 import { toast } from "react-toastify";
+import CropTable from "../Components/CropTable"; 
+
 
 const MyPosts = () => {
   const axiosSecure = useAxiosSecure();
   const { user } = use(AuthContext);
-  const [loading, setloading] = useState(false);
+  const [loading, setloading] = useState(true);
   const [crops, setCrops] = useState([]);
-  console.log(crops);
-  //edit modal
+
+  // edit modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCrop, setEditingCrop] = useState(null);
 
-  // console.log(user);
   useEffect(() => {
-    axiosSecure.get(`/my-posts?email=${user?.email}`).then((result) => {
-      // console.log(result.data);
-      setloading(false);
-      setCrops(result.data);
-    });
-  }, [user, setCrops, axiosSecure]);
+    setloading(true);
+    // Fetch posts created by the current user
+    axiosSecure.get(`/my-posts?email=${user?.email}`)
+      .then((result) => {
+        setCrops(result.data);
+      })
+      .catch(error => {
+        console.error("Error fetching my posts:", error);
+        toast.error("Failed to load your posts.");
+      })
+      .finally(() => {
+        setloading(false);
+      });
+  }, [user, axiosSecure]);
 
   const handleDelete = (id) => {
     Swal.fire({
@@ -41,57 +49,68 @@ const MyPosts = () => {
           if (res.data.deletedCount > 0) {
             Swal.fire({
               title: "Deleted!",
-              text: "Your file has been deleted.",
+              text: "Your crop post has been deleted.",
               icon: "success",
             });
+            // Update the state to remove the deleted crop
             setCrops((prev) => prev.filter((crop) => crop._id !== id));
           }
+        })
+        .catch(error => {
+            console.error("Error deleting post:", error);
+            toast.error("Failed to delete the post.");
         });
       }
     });
   };
 
   const handleEdit = (id) => {
-    console.log(id);
     const selected = crops.find((crop) => crop._id === id);
     setEditingCrop(selected);
-    console.log(selected);
     setIsModalOpen(true);
   };
 
   const handleSaveEdit = (updatedCrop) => {
-    console.log(updatedCrop);
-    axiosSecure.patch(`/edit/${updatedCrop._id}`,updatedCrop)
-    .then(res=> {
-      console.log(res);
-      setIsModalOpen(false);
-      toast.success("updated success")
-
-      setCrops((prev) =>
-        prev.map((crop) =>
-          crop._id === updatedCrop._id ? { ...crop, ...updatedCrop } : crop
-        )
-      )
-    })
+    axiosSecure.patch(`/edit/${updatedCrop._id}`, updatedCrop)
+      .then(res => {
+        if (res.data.modifiedCount > 0) {
+            setIsModalOpen(false);
+            toast.success("Crop updated successfully!");
+            // Update the state with the new crop data
+            setCrops((prev) =>
+              prev.map((crop) =>
+                crop._id === updatedCrop._id ? { ...crop, ...updatedCrop } : crop
+              )
+            );
+        } else {
+            toast.info("No changes were made or update failed.");
+        }
+      })
+      .catch(error => {
+        console.error("Error updating post:", error);
+        toast.error("Failed to update the post.");
+      });
   };
 
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
-    <div>
-      {loading ? (
-        <Loading></Loading>
-      ) : crops.length === 0 ? (
-        <div>You haven't created Post....</div>
-      ) : (
-        <div className="w-full container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 place-items-center p-5">
-          {crops.map((singleCrop) => (
-            <MyCard
-              singleCrop={singleCrop}
-              handleDelete={handleDelete}
-              handleEdit={handleEdit}
-              key={singleCrop._id}
-            />
-          ))}
+    <div className="w-full container mx-auto p-5">
+      <h2 className="text-3xl font-bold text-center mb-6 text-green-700">🌱 My Crop Posts</h2>
+      
+      {crops.length === 0 ? (
+        <div className="text-center p-10 text-xl font-medium text-gray-600">
+          You haven't created any posts yet.
         </div>
+      ) : (
+        <CropTable
+          crops={crops}
+          handleDelete={handleDelete}
+          handleEdit={handleEdit}
+          user={user} 
+        />
       )}
 
       <EditModal
