@@ -3,7 +3,7 @@ import React, { use, useEffect } from "react";
 import { AuthContext } from "../Provider/AuthContext";
 
 const instance = axios.create({
-  baseURL: "http://localhost:5000",
+  baseURL: "https://krishi-link-server-pi.vercel.app",
 });
 
 const useAxiosSecure = () => {
@@ -37,7 +37,7 @@ const useAxiosSecure = () => {
     };
   }, [user]);
 
-  return instance
+  return instance;
 };
 
 export default useAxiosSecure;
