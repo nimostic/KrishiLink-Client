@@ -3,13 +3,14 @@ import styled from "styled-components";
 import { AuthContext } from "../Provider/AuthContext";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 const AddCrops = () => {
   const { user } = useContext(AuthContext);
   const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
-
+  const location = useLocation()
+  console.log(location);
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.target;

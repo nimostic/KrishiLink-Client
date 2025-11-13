@@ -9,7 +9,7 @@ const MyInterest = () => {
   const { user } = useContext(AuthContext);
   const [totalCropsInterested, setTotalCropsInterested] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [sortDirection, setSortDirection] = useState(null);
   useEffect(() => {
     if (!user?.email) return;
 
@@ -17,11 +17,37 @@ const MyInterest = () => {
       console.log(res.data);
       setTotalCropsInterested(res.data);
       setLoading(false);
-      
     });
   }, [axiosSecure, user?.email]);
 
+  const handleSort = () => {
+    setSortDirection((currentDirection) => {
+      if (currentDirection === null) {
+        return "desc"; 
+      } else if (currentDirection === "desc") {
+        return "asc"; 
+      } else {
+        return null; 
+      }
+    });
+  };
+
   if (loading) return <Loading />;
+
+  let sortedCrops = [...totalCropsInterested];
+
+  if (sortDirection !== null) {
+    sortedCrops.sort((a, b) => {
+      const interestA = a.interests.find((i) => i.buyerEmail === user.email);
+      const interestB = b.interests.find((i) => i.buyerEmail === user.email);
+
+      const quantA = Number(interestA?.quantity || 0);
+      const quantB = Number(interestB?.quantity || 0);
+      return sortDirection === "desc"
+        ? quantB - quantA
+        : quantA - quantB;
+    });
+  }
 
   return (
     <div className="bg-[#E9FDF0] min-h-screen p-6">
@@ -41,17 +67,27 @@ const MyInterest = () => {
                 <th className="py-3 px-4 text-left">#</th>
                 <th className="py-3 px-4 text-left">Crop Name</th>
                 <th className="py-3 px-4 text-left">Owner</th>
-                <th className="py-3 px-4 text-left">Quantity</th>
+                <th
+                  className="py-3 px-4 text-left cursor-pointer select-none"
+                  onClick={handleSort}
+                >
+                  Quantity
+                  {sortDirection === "desc" && " 🔽"}
+                  {sortDirection === "asc" && " 🔼"}
+                </th>
+                
                 <th className="py-3 px-4 text-left">Message</th>
                 <th className="py-3 px-4 text-left">Status</th>
               </tr>
             </thead>
             <tbody>
-              {totalCropsInterested.map((singleCrop, index) => {
-                // const myInterest = singleCrop.interests[0];
+              {sortedCrops.map((singleCrop, index) => {
                 const myInterest = singleCrop.interests.find(
                   (interest) => interest.buyerEmail === user.email
                 );
+                
+                if (!myInterest) return null; 
+
                 return (
                   <tr
                     key={index}
