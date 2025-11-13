@@ -1,12 +1,10 @@
 import React, { use } from "react";
 import { FaFacebook, FaInstagram, FaLinkedin, FaGithub } from "react-icons/fa";
-import { Link, useLocation } from "react-router";
+import { Link} from "react-router";
 import { AuthContext } from "../Provider/AuthContext";
 
 const Footer = () => {
   const { user } = use(AuthContext);
-    const location = useLocation()
-    // console.log(location);
   return (
     <footer className="bg-linear-to-b from-green-900 to-green-800 text-gray-100 py-10">
       <div className="w-11/12 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
