@@ -18,7 +18,7 @@ const CropDetails = () => {
   const [interests, setInterests] = useState([]);
   const [formData, setFormData] = useState({ quantity: "", message: "" });
   const [showConfirm, setShowConfirm] = useState(false);
-
+  const [disabledSubmit, setDisabledSubmit] = useState(false);
   useEffect(() => {
     Aos.init({ duration: 600, once: true });
   }, []);
@@ -37,6 +37,15 @@ const CropDetails = () => {
     };
     fetchCrop();
   }, [id, axiosSecure]);
+
+    useEffect(() => {
+    const userHasInterest = interests.some(
+      (interest) => interest.buyerEmail === user?.email
+    );
+    if (userHasInterest) setDisabledSubmit(true);
+  }, [interests, user]);
+
+
 
   if (loading) return <Loading />;
   if (!crop) return <div className="text-center py-10">Crop not found</div>;
@@ -77,10 +86,8 @@ const CropDetails = () => {
     try {
       await axiosSecure.post("/interests", interestData);
       toast.success("Interest sent successfully!");
-
-      // Update local interests so owner sees it
+      // owner irl update pabe 
       setInterests((prev) => [...prev, interestData]);
-
       setShowConfirm(false);
       setFormData({ quantity: "", message: "" });
     } catch (error) {
@@ -97,7 +104,7 @@ const CropDetails = () => {
       <div className="max-w-4xl w-full bg-white rounded-2xl shadow-lg overflow-hidden">
         {/* Crop Info Section */}
         <div className="relative">
-          <img
+          <img 
             src={crop.imageURL}
             alt={crop.name}
             className="w-full h-64 object-cover"
@@ -116,7 +123,13 @@ const CropDetails = () => {
             <strong>Category:</strong> {crop.type}
           </p>
           <p className="text-gray-600 mb-1">
+            <strong>Owner:</strong> {crop.owner.ownerName}
+          </p>
+          <p className="text-gray-600 mb-1">
             <strong>Price per unit:</strong> ${crop.pricePerUnit}
+          </p>
+          <p className="text-gray-600 mb-1">
+            <strong>Quantiy:</strong> {crop.quantity}
           </p>
           <p className="text-gray-600 mb-1">
             <strong>Location:</strong> {crop.location}
@@ -154,9 +167,10 @@ const CropDetails = () => {
               </p>
               <button
                 type="submit"
-                className="btn bg-green-600 text-white hover:bg-green-700 w-full"
+                disabled={disabledSubmit}
+                className={`btn bg-green-600 text-white hover:bg-green-700 w-full`}
               >
-                Submit Interest
+                {disabledSubmit ? "Already Submitted" : "Submit"}
               </button>
             </form>
           </div>
@@ -171,7 +185,11 @@ const CropDetails = () => {
             <p className="text-gray-500 mb-3">
               <strong>Total Interested: {interests.length}</strong>
             </p>
-            <Interested interests={interests}  setInterests={setInterests} crop={crop} />
+            <Interested
+              interests={interests}
+              setInterests={setInterests}
+              crop={crop}
+            />
           </div>
         )}
       </div>

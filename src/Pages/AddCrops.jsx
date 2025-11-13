@@ -46,7 +46,8 @@ const AddCrops = () => {
   };
 
   return (
-    <StyledWrapper>
+   <div className="bg-[#E9FDF0] py-10">
+     <StyledWrapper>
       <form onSubmit={handleSubmit} className="form container mx-auto">
         <p className="title">Add a Crop</p>
         <div className="flex">
@@ -95,6 +96,7 @@ const AddCrops = () => {
         <button className="submit">Submit</button>
       </form>
     </StyledWrapper>
+   </div>
   );
 };
 

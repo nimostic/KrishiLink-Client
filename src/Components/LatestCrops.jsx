@@ -22,7 +22,7 @@ const LatestCrops = () => {
   return (
     <>
       <div className="py-10 bg-[#E9FDF0]">
-        <h1 className="font-bold text-3xl text-center">Latest Crops</h1>
+        <h1 className="font-bold text-3xl text-center text-green-700">Latest Crops</h1>
         <div className="w-full container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 place-items-center p-5">
           {latest.map((singleCrop) => (
             <Card singleCrop={singleCrop} key={singleCrop._id} />

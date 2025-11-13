@@ -97,8 +97,9 @@ const MyPosts = () => {
   }
 
   return (
-    <div className="w-full container mx-auto p-5">
-      <h2 className="text-3xl font-bold text-center mb-6 text-green-700">🌱 My Crop Posts</h2>
+   <div className="bg-[#E9FDF0] min-h-screen">
+     <div className="w-full container mx-auto p-5">
+      <h2 className="text-3xl font-bold text-center mb-6 text-green-700">My Posts({crops.length})</h2>
       
       {crops.length === 0 ? (
         <div className="text-center p-10 text-xl font-medium text-gray-600">
@@ -120,6 +121,7 @@ const MyPosts = () => {
         handleSaveEdit={handleSaveEdit}
       />
     </div>
+   </div>
   );
 };
 

@@ -19,7 +19,7 @@ const CropTable = ({ crops, handleDelete, handleEdit, user }) => {
 
   return (
     <div className="w-full">
-      <div className="hidden md:block overflow-x-auto shadow-xl rounded-lg">
+      <div className="overflow-x-auto shadow-xl rounded-lg">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-green-500 text-white">
             <tr>
@@ -74,58 +74,7 @@ const CropTable = ({ crops, handleDelete, handleEdit, user }) => {
         </table>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:hidden">
-        {crops.map((crop) => {
-          const isOwner = crop.owner?.ownerEmail === user?.email;
-          return (
-            <div key={crop._id} className="bg-white p-4 shadow-lg rounded-lg border-t-4 border-green-500">
-              <div className="flex justify-between items-start mb-2">
-                <h3 className="text-xl font-bold text-green-700">
-                    <Link to={`/crops/${crop._id}`} className="hover:underline">
-                        {crop.name || "Crop Detail"}
-                    </Link>
-                </h3>
-                {/* Actions on top right for mobile */}
-                {isOwner && (
-                    <div className="flex space-x-2">
-                      <button
-                        onClick={() => handleEdit(crop._id)}
-                        className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-3 rounded text-xs"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(crop._id)}
-                        className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded text-xs"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                )}
-              </div>
-
-              {/* Data points */}
-              <div className="text-sm space-y-1">
-                <p className="font-medium text-gray-700">
-                  <span className="text-gray-500 w-24 inline-block">Type:</span> {crop.type || "-"}
-                </p>
-                <p className="font-medium text-gray-700">
-                  <span className="text-gray-500 w-24 inline-block">Price/Unit:</span> {crop.pricePerUnit ? `$${crop.pricePerUnit}` : "-"}
-                </p>
-                <p className="font-medium text-gray-700">
-                  <span className="text-gray-500 w-24 inline-block">Quantity:</span> {crop.quantity || "-"}
-                </p>
-                <p className="font-medium text-gray-700">
-                  <span className="text-gray-500 w-24 inline-block">Owner:</span> {crop.owner?.ownerName || "-"}
-                </p>
-                <p className="font-medium text-gray-700">
-                  <span className="text-gray-500 w-24 inline-block">Posted Date:</span> {formatDate(crop.createdAt)}
-                </p>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+    
     </div>
   );
 };
